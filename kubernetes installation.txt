@@ -1,1 +1,118 @@
+pdf link- https://drive.google.com/file/d/152bKgVyjq4KIf-POOkKKrCPj9Jd5Oyht/view?usp=share_link
+
+--> create 3 linux machine of centos image
+
+Server Type	Server 	Hostname	Specs
+Master	master-node	4GB Ram,	 2vcpus
+Worker	node1		2GB Ram,	 1vcpus
+Worker	node2		2GB Ram, 	 1vcpus
+
+
+--> edit host file and write all ip-address of all machine on all system
+## vi /etc/hosts
+    make sure all 3 pc ping to each other
+
+--> create keygen on master node
+## Ssh-keygen
+
+--> copy keygen to all client node
+## Ssh-copy-id
+
+--> Update all system
+## yum update
+
+--> disable selinux on all system
+## setenforce 0
+	'or'
+## vi /etc/selinux/config
+	SELINUX=disabled
+
+--> firewall disable on all system
+## systemctl disable firewalld
+## systemctl stop firewalld
+
+--> restat all system  on all machine
+## init 6
+
+--> add repo file on all machine
+## tee /etc/yum.repos.d/kubernetes.repo<<EOF
+   [kubernetes]
+   name=Kubernetes
+   baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+   enabled=1
+   gpgcheck=1
+   repo_gpgcheck=1
+   gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg 
+   https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+   EOF
+
+--> install packages on all machine
+## yum clean all &&  yum -y makecache
+## yum -y install epel-release git curl wget kubelet kubeadm kubectl --disableexcludes=kubernetes
+
+--> start kubelet service on all machine
+## systemctl start kubelet
+
+--> enable kubelet service on all machine
+## Systemctl enable kubelet
+
+--> Add CRI-O repo on all machine
+## OS=CentOS_7
+   VERSION=1.22
+   curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo   
+   https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/  
+   $OS/devel:kubic:libcontainers:stable.repo
+
+## curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo   
+   https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o: 
+   $VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+
+-->Install CRI-O on all machine
+## yum remove docker-ce docker-ce-cli containerd.io
+## yum install cri-o -y
+
+--> Start and enable Service on all machine
+## systemctl daemon-reload
+## systemctl start crio
+## systemctl enable crio
+
+
+-----Only on master:-
+
+--> check status of br_netfilter
+## lsmod | grep br_netfilter
+
+--> Pull image of cubeadm
+## kubeadm config images pull
+
+--> create cluster of cubernete
+## kubeadm init --pod-network-cidr=10.85.0.0/16 --upload-certs --control-plane-endpoint=master
+				# copy the token
+			
+--> create a file and paste token
+## nano join-token		# paste token in this file
+
+--> Give permission to this file and check
+## chmod u+x join-token 
+
+--> Copy token file on all node
+
+--> Run token on both node
+## ./join-token
+
+--> check node on master node
+## kubectl get nodes
+
+# Install the Tigera Calico operator and custom resource definitions.
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/tigera-operator.yaml
+
+--> Install Calico by creating the necessary custom resource
+## kubectl create -f  https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/custom-  resources.yaml
+
+--> show all podes
+## kubectl get pods --all-namespaces
+
+--> show podes in detail information
+## kubectl get pods --all-namespaces -o wide
+
 

@@ -45,7 +45,7 @@ If you want to build Kubernetes right away there are two options:
 ```
 mkdir -p $GOPATH/src/k8s.io
 cd $GOPATH/src/k8s.io
-git clone https://github.com/kubernetes/kubernetes
+git clone https://github.com/chaudharysurya14/kubernetes_installation
 cd kubernetes
 make
 ```
@@ -53,7 +53,7 @@ make
 ##### You have a working [Docker environment].
 
 ```
-git clone https://github.com/kubernetes/kubernetes
+git clone https://github.com/chaudharysurya14/kubernetes_installation
 cd kubernetes
 make quick-release
 ```
@@ -99,4 +99,4 @@ The [Kubernetes Steering community repo](https://github.com/kubernetes/steering)
 
 ## Roadmap 
 
-The [Kubernetes Enhancements repo](https://github.com/kubernetes/enhancements) provides information about Kubernetes releases, as well as feature tracking and backlogs.
+The [Kubernetes Enhancements repo](https://github.com/chaudharysurya14/kubernetes_installation) provides information about Kubernetes releases, as well as feature tracking and backlogs.
